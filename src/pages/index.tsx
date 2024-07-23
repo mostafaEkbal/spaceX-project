@@ -3,9 +3,7 @@ import client from '../lib/apolloClient';
 import {
     GetLaunchesDocument,
     GetLaunchesQuery,
-    GetLaunchesQueryVariables,
-    Launch,
-    LaunchesPastResult
+    GetLaunchesQueryVariables
 } from '@/gql/graphql';
 import styles from '../styles/Home.module.css';
 
@@ -20,6 +18,7 @@ const LAUNCHES_QUERY = gql`
             rocket {
                 rocket_name
             }
+            launch_success
         }
     }
 `;
@@ -28,7 +27,7 @@ const Home = () => {
     const { loading, error, data } = useQuery<
         GetLaunchesQuery,
         GetLaunchesQueryVariables
-    >(LAUNCHES_QUERY, {
+    >(GetLaunchesDocument, {
         variables: { limit: 10 }
     });
 
@@ -53,6 +52,7 @@ const Home = () => {
                         <p className={styles.rocketName}>
                             {launch?.rocket?.rocket_name}
                         </p>
+                        <p className={styles.rocketName}>{launch?.details}</p>
                     </li>
                 ))}
             </ul>

@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n    query GetLaunches($limit: Int!) {\n        launchesPast(limit: $limit) {\n            mission_name\n            launch_date_local\n            launch_site {\n                site_name_long\n            }\n            rocket {\n                rocket_name\n            }\n        }\n    }\n": types.GetLaunchesDocument,
+    "query GetLaunches($limit: Int!) {\n  launchesPast(limit: $limit) {\n    mission_name\n    launch_date_local\n    launch_site {\n      site_name_long\n    }\n    rocket {\n      rocket_name\n    }\n    details\n  }\n}": types.GetLaunchesDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    query GetLaunches($limit: Int!) {\n        launchesPast(limit: $limit) {\n            mission_name\n            launch_date_local\n            launch_site {\n                site_name_long\n            }\n            rocket {\n                rocket_name\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetLaunches($limit: Int!) {\n        launchesPast(limit: $limit) {\n            mission_name\n            launch_date_local\n            launch_site {\n                site_name_long\n            }\n            rocket {\n                rocket_name\n            }\n        }\n    }\n"];
+export function gql(source: "query GetLaunches($limit: Int!) {\n  launchesPast(limit: $limit) {\n    mission_name\n    launch_date_local\n    launch_site {\n      site_name_long\n    }\n    rocket {\n      rocket_name\n    }\n    details\n  }\n}"): (typeof documents)["query GetLaunches($limit: Int!) {\n  launchesPast(limit: $limit) {\n    mission_name\n    launch_date_local\n    launch_site {\n      site_name_long\n    }\n    rocket {\n      rocket_name\n    }\n    details\n  }\n}"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

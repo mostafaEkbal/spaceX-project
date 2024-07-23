@@ -7,11 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen-watch": "graphql-codegen --watch -r",
+    "codegen-watch": "graphql-codegen --watch ",
     "codegen": "graphql-codegen"
   },
   "dependencies": {
     "@apollo/client": "^3.11.0",
+    "@parcel/watcher": "^2.4.1",
     "graphql": "^16.9.0",
     "next": "14.2.3",
     "react": "^18",
