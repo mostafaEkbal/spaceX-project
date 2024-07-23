@@ -1,9 +1,17 @@
 import { gql, useQuery } from '@apollo/client';
 import client from '../lib/apolloClient';
+import {
+    GetLaunchesDocument,
+    GetLaunchesQuery,
+    GetLaunchesQueryVariables,
+    Launch,
+    LaunchesPastResult
+} from '@/gql/graphql';
+import styles from '../styles/Home.module.css';
 
 const LAUNCHES_QUERY = gql`
-    query GetLaunches {
-        launchesPast(limit: 5) {
+    query GetLaunches($limit: Int!) {
+        launchesPast(limit: $limit) {
             mission_name
             launch_date_local
             launch_site {
@@ -17,21 +25,34 @@ const LAUNCHES_QUERY = gql`
 `;
 
 const Home = () => {
-    const { loading, error, data } = useQuery(LAUNCHES_QUERY);
+    const { loading, error, data } = useQuery<
+        GetLaunchesQuery,
+        GetLaunchesQueryVariables
+    >(LAUNCHES_QUERY, {
+        variables: { limit: 10 }
+    });
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
     return (
-        <div>
-            <h1>SpaceX Launches</h1>
-            <ul>
-                {data.launchesPast.map((launch: any) => (
-                    <li key={launch.mission_name}>
-                        <h2>{launch.mission_name}</h2>
-                        <p>{launch.launch_date_local}</p>
-                        <p>{launch.launch_site.site_name_long}</p>
-                        <p>{launch.rocket.rocket_name}</p>
+        <div className={styles.container}>
+            <h1 className={styles.title}>SpaceX Launches</h1>
+            <ul className={styles.list}>
+                {data?.launchesPast?.map((launch) => (
+                    <li key={launch?.mission_name} className={styles.listItem}>
+                        <h2 className={styles.missionName}>
+                            {launch?.mission_name}
+                        </h2>
+                        <p className={styles.launchDate}>
+                            {launch?.launch_date_local}
+                        </p>
+                        <p className={styles.launchSite}>
+                            {launch?.launch_site?.site_name_long}
+                        </p>
+                        <p className={styles.rocketName}>
+                            {launch?.rocket?.rocket_name}
+                        </p>
                     </li>
                 ))}
             </ul>
