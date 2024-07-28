@@ -1,16 +1,20 @@
-query GetLaunches($limit: Int!) {
-    launchesPast(limit: $limit) {
+query GetLaunches($limit: Int = 50) {
+    notLaunch: launchesPast(limit: $limit) {
         mission_name
         launch_date_local
         launch_site {
             site_name_long
         }
         rocket {
-            rocket_name
+            ...rocketFields
         }
         details
         id
     }
+}
+
+fragment rocketFields on LaunchRocket {
+    rocket_name
 }
 
 query GetLaunche($id: ID!) {

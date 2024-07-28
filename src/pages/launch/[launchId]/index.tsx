@@ -21,12 +21,13 @@ const Launch: React.FC<LuanchPageProps> = ({ launch }) => {
     return (
         <div>
             <li key={launch?.mission_name} className={styles.listItem}>
-                <a href={launch?.links?.video_link ?? ''}>Video Link</a>
                 <h2 className={styles.missionName}>{launch?.mission_name}</h2>
+                <h3>{launch?.id}</h3>
                 <p className={styles.launchDate}>{launch?.launch_date_local}</p>
                 <p className={styles.launchSite}>{launch?.launch_success}</p>
                 <p className={styles.rocketName}>{launch?.upcoming}</p>
                 <p className={styles.rocketName}>{launch?.details}</p>
+                <a href={launch?.links?.video_link ?? ''}>Launch Video Link</a>
             </li>
         </div>
     );

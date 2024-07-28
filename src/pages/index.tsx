@@ -11,9 +11,7 @@ const Home = () => {
     const { loading, error, data } = useQuery<
         GetLaunchesQuery,
         GetLaunchesQueryVariables
-    >(GetLaunchesDocument, {
-        variables: { limit: 10 }
-    });
+    >(GetLaunchesDocument);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -22,7 +20,7 @@ const Home = () => {
         <div className={styles.container}>
             <h1 className={styles.title}>SpaceX Launches</h1>
             <ul className={styles.list}>
-                {data?.launchesPast?.map((launch) => (
+                {data?.notLaunch?.map((launch) => (
                     <Link
                         key={launch?.mission_name}
                         href={`launch/${launch?.id}`}
