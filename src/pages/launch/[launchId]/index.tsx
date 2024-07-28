@@ -12,17 +12,38 @@ import {
     CollapsibleContent,
     CollapsibleTrigger
 } from '@/components/ui/collapsible';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@apollo/client';
 
 type LuanchPageProps = {
     launch: GetLauncheQuery['launch'];
 };
 
-const Launch: React.FC<LuanchPageProps> = ({ launch }) => {
+const Launch: React.FC<LuanchPageProps> = () => {
+    const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
+    const { isReady, query } = router;
+    const { launchId } = query as { launchId: string };
 
-    if (router.isFallback) {
-        return <p>Loading...</p>;
+    const { data, loading, error } = useQuery(GetLauncheDocument, {
+        variables: { id: launchId, isOpen: isOpen }
+    });
+
+    if (!isReady) {
+        return <p>loading</p>;
     }
+    if (loading) {
+        return <p>loading</p>;
+    }
+    if (error) {
+        return <p>{error.message}</p>;
+    }
+
+    const { launch } = data as GetLauncheQuery;
+
+    // if (router.isFallback) {
+    //     return <p>Loading...</p>;
+    // }
     return (
         <div>
             <li key={launch?.mission_name} className={styles.listItem}>
@@ -32,16 +53,23 @@ const Launch: React.FC<LuanchPageProps> = ({ launch }) => {
                 <p className={styles.launchSite}>{launch?.launch_success}</p>
                 <p className={styles.rocketName}>{launch?.upcoming}</p>
                 <p className={styles.rocketName}>{launch?.details}</p>
-                <Collapsible>
-                    <CollapsibleTrigger>
-                        Can I use this in my project?
+                <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+                    <CollapsibleTrigger
+                        style={{
+                            padding: 10,
+                            border: 'none'
+                        }}
+                    >
+                        see more
                     </CollapsibleTrigger>
-                    <CollapsibleContent>
-                        Yes. Free to use for personal and commercial projects.
-                        No attribution required.
+                    <CollapsibleContent style={{ marginTop: 20 }}>
+                        <a href={launch?.links?.video_link ?? ''}>
+                            {launch?.links?.video_link
+                                ? 'Launch Video Link'
+                                : ''}
+                        </a>
                     </CollapsibleContent>
                 </Collapsible>
-                <a href={launch?.links?.video_link ?? ''}>Launch Video Link</a>
             </li>
         </div>
     );
@@ -49,43 +77,43 @@ const Launch: React.FC<LuanchPageProps> = ({ launch }) => {
 
 export default Launch;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-    return {
-        paths: [],
-        fallback: true
-    };
-};
+// export const getStaticPaths: GetStaticPaths = async () => {
+//     return {
+//         paths: [],
+//         fallback: true
+//     };
+// };
 
-export const getStaticProps: GetStaticProps<LuanchPageProps> = async ({
-    params
-}) => {
-    const id = params?.launchId;
+// export const getStaticProps: GetStaticProps<LuanchPageProps> = async ({
+//     params
+// }) => {
+//     const id = params?.launchId;
 
-    if (typeof id !== 'string') {
-        return {
-            notFound: true
-        };
-    }
+//     if (typeof id !== 'string') {
+//         return {
+//             notFound: true
+//         };
+//     }
 
-    try {
-        const { data } = await client.query<
-            GetLauncheQuery,
-            GetLauncheQueryVariables
-        >({
-            query: GetLauncheDocument,
-            variables: { id }
-        });
+//     try {
+//         const { data } = await client.query<
+//             GetLauncheQuery,
+//             GetLauncheQueryVariables
+//         >({
+//             query: GetLauncheDocument,
+//             variables: { id }
+//         });
 
-        return {
-            props: {
-                launch: data.launch
-            },
-            revalidate: 60 // Re-generate the page every 60 seconds
-        };
-    } catch (error) {
-        console.error('Error fetching Pokemon:', error);
-        return {
-            notFound: true
-        };
-    }
-};
+//         return {
+//             props: {
+//                 launch: data.launch
+//             },
+//             revalidate: 60 // Re-generate the page every 60 seconds
+//         };
+//     } catch (error) {
+//         console.error('Error fetching Pokemon:', error);
+//         return {
+//             notFound: true
+//         };
+//     }
+// };

@@ -17,7 +17,7 @@ fragment rocketFields on LaunchRocket {
     rocket_name
 }
 
-query GetLaunche($id: ID!) {
+query GetLaunche($id: ID!, $isOpen: Boolean = true) {
     launch(id: $id) {
         details
         id
@@ -33,7 +33,7 @@ query GetLaunche($id: ID!) {
         static_fire_date_utc
         tentative_max_precision
         upcoming
-        links {
+        links @include(if: $isOpen) {
             video_link
         }
     }
