@@ -7,6 +7,11 @@ import { useRouter } from 'next/router';
 import styles from '@/styles/Home.module.css';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import client from '@/lib/apolloClient';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger
+} from '@/components/ui/collapsible';
 
 type LuanchPageProps = {
     launch: GetLauncheQuery['launch'];
@@ -27,6 +32,15 @@ const Launch: React.FC<LuanchPageProps> = ({ launch }) => {
                 <p className={styles.launchSite}>{launch?.launch_success}</p>
                 <p className={styles.rocketName}>{launch?.upcoming}</p>
                 <p className={styles.rocketName}>{launch?.details}</p>
+                <Collapsible>
+                    <CollapsibleTrigger>
+                        Can I use this in my project?
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        Yes. Free to use for personal and commercial projects.
+                        No attribution required.
+                    </CollapsibleContent>
+                </Collapsible>
                 <a href={launch?.links?.video_link ?? ''}>Launch Video Link</a>
             </li>
         </div>
