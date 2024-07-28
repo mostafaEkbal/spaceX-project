@@ -29,5 +29,8 @@ query GetLaunche($id: ID!) {
         static_fire_date_utc
         tentative_max_precision
         upcoming
+        links {
+            video_link
+        }
     }
 }

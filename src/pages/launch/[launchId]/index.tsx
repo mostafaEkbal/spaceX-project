@@ -20,11 +20,8 @@ const Launch: React.FC<LuanchPageProps> = ({ launch }) => {
     }
     return (
         <div>
-            <li
-                key={launch?.mission_name}
-                className={styles.listItem}
-                style={{ cursor: 'pointer' }}
-            >
+            <li key={launch?.mission_name} className={styles.listItem}>
+                <a href={launch?.links?.video_link ?? ''}>Video Link</a>
                 <h2 className={styles.missionName}>{launch?.mission_name}</h2>
                 <p className={styles.launchDate}>{launch?.launch_date_local}</p>
                 <p className={styles.launchSite}>{launch?.launch_success}</p>
