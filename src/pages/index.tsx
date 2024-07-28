@@ -1,27 +1,11 @@
-import { gql, useQuery } from '@apollo/client';
-import client from '../lib/apolloClient';
+import { useQuery } from '@apollo/client';
 import {
     GetLaunchesDocument,
     GetLaunchesQuery,
     GetLaunchesQueryVariables
 } from '@/gql/graphql';
 import styles from '../styles/Home.module.css';
-
-const LAUNCHES_QUERY = gql`
-    query GetLaunches($limit: Int!) {
-        launchesPast(limit: $limit) {
-            mission_name
-            launch_date_local
-            launch_site {
-                site_name_long
-            }
-            rocket {
-                rocket_name
-            }
-            launch_success
-        }
-    }
-`;
+import Link from 'next/link';
 
 const Home = () => {
     const { loading, error, data } = useQuery<
@@ -39,21 +23,31 @@ const Home = () => {
             <h1 className={styles.title}>SpaceX Launches</h1>
             <ul className={styles.list}>
                 {data?.launchesPast?.map((launch) => (
-                    <li key={launch?.mission_name} className={styles.listItem}>
-                        <h2 className={styles.missionName}>
-                            {launch?.mission_name}
-                        </h2>
-                        <p className={styles.launchDate}>
-                            {launch?.launch_date_local}
-                        </p>
-                        <p className={styles.launchSite}>
-                            {launch?.launch_site?.site_name_long}
-                        </p>
-                        <p className={styles.rocketName}>
-                            {launch?.rocket?.rocket_name}
-                        </p>
-                        <p className={styles.rocketName}>{launch?.details}</p>
-                    </li>
+                    <Link
+                        key={launch?.mission_name}
+                        href={`launch/${launch?.id}`}
+                    >
+                        <li
+                            className={styles.listItem}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <h2 className={styles.missionName}>
+                                {launch?.mission_name}
+                            </h2>
+                            <p className={styles.launchDate}>
+                                {launch?.launch_date_local}
+                            </p>
+                            <p className={styles.launchSite}>
+                                {launch?.launch_site?.site_name_long}
+                            </p>
+                            <p className={styles.rocketName}>
+                                {launch?.rocket?.rocket_name}
+                            </p>
+                            <p className={styles.rocketName}>
+                                {launch?.details}
+                            </p>
+                        </li>
+                    </Link>
                 ))}
             </ul>
         </div>

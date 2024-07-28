@@ -9,5 +9,25 @@ query GetLaunches($limit: Int!) {
             rocket_name
         }
         details
+        id
+    }
+}
+
+query GetLaunche($id: ID!) {
+    launch(id: $id) {
+        details
+        id
+        is_tentative
+        launch_date_local
+        launch_date_unix
+        launch_date_utc
+        launch_success
+        launch_year
+        mission_id
+        mission_name
+        static_fire_date_unix
+        static_fire_date_utc
+        tentative_max_precision
+        upcoming
     }
 }
