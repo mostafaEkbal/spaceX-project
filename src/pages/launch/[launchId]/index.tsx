@@ -3,34 +3,21 @@ import {
     GetLauncheQuery,
     GetLauncheQueryVariables
 } from '@/gql/graphql';
-import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import styles from '@/styles/Home.module.css';
+import { GetStaticPaths, GetStaticProps } from 'next';
+import client from '@/lib/apolloClient';
 
-const Launch = () => {
+type LuanchPageProps = {
+    launch: GetLauncheQuery['launch'];
+};
+
+const Launch: React.FC<LuanchPageProps> = ({ launch }) => {
     const router = useRouter();
-    const { query } = router;
-    const { launchId } = query as { launchId: string };
 
-    const { data, error, loading } = useQuery<
-        GetLauncheQuery,
-        GetLauncheQueryVariables
-    >(GetLauncheDocument, {
-        variables: { id: launchId },
-        skip: !launchId
-    });
-
-    // Handle the case when the route is not yet available
-    if (!launchId) {
+    if (router.isFallback) {
         return <p>Loading...</p>;
     }
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
-
-    const { launch } = data as GetLauncheQuery;
-
     return (
         <div>
             <li
@@ -40,12 +27,8 @@ const Launch = () => {
             >
                 <h2 className={styles.missionName}>{launch?.mission_name}</h2>
                 <p className={styles.launchDate}>{launch?.launch_date_local}</p>
-                <p className={styles.launchSite}>
-                    {launch?.launch_site?.site_name_long}
-                </p>
-                <p className={styles.rocketName}>
-                    {launch?.rocket?.rocket_name}
-                </p>
+                <p className={styles.launchSite}>{launch?.launch_success}</p>
+                <p className={styles.rocketName}>{launch?.upcoming}</p>
                 <p className={styles.rocketName}>{launch?.details}</p>
             </li>
         </div>
@@ -53,3 +36,44 @@ const Launch = () => {
 };
 
 export default Launch;
+
+export const getStaticPaths: GetStaticPaths = async () => {
+    return {
+        paths: [],
+        fallback: true
+    };
+};
+
+export const getStaticProps: GetStaticProps<LuanchPageProps> = async ({
+    params
+}) => {
+    const id = params?.launchId;
+
+    if (typeof id !== 'string') {
+        return {
+            notFound: true
+        };
+    }
+
+    try {
+        const { data } = await client.query<
+            GetLauncheQuery,
+            GetLauncheQueryVariables
+        >({
+            query: GetLauncheDocument,
+            variables: { id }
+        });
+
+        return {
+            props: {
+                launch: data.launch
+            },
+            revalidate: 60 // Re-generate the page every 60 seconds
+        };
+    } catch (error) {
+        console.error('Error fetching Pokemon:', error);
+        return {
+            notFound: true
+        };
+    }
+};
