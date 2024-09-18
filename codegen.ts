@@ -1,16 +1,15 @@
-import { CodegenConfig } from '@graphql-codegen/cli';
+import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-    schema: 'https://spacex-production.up.railway.app/',
-    documents: ['src/**/*.graphql'],
+    schema: "https://spacex-production.up.railway.app/",
+    documents: ["src/**/*.graphql"],
     generates: {
-        './src/gql/': {
-            preset: 'client',
+        "./src/graphql/": {
+            preset: "client",
             presetConfig: {
-                gqlTagName: 'gql'
+                gqlTagName: "gql"
             }
         }
-    },
-    watch: true
+    }
 };
 export default config;

@@ -15,11 +15,11 @@ import {
 import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 
-type LuanchPageProps = {
+type LaunchPageProps = {
     launch: GetLauncheQuery['launch'];
 };
 
-const Launch: React.FC<LuanchPageProps> = () => {
+const Launch: React.FC<LaunchPageProps> = () => {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     const { isReady, query } = router;
@@ -62,7 +62,9 @@ const Launch: React.FC<LuanchPageProps> = () => {
                     >
                         see more
                     </CollapsibleTrigger>
-                    <CollapsibleContent style={{ marginTop: 20 }}>
+                    <CollapsibleContent
+                        style={isOpen ? { marginTop: 20 } : { display: 'none' }}
+                    >
                         <a href={launch?.links?.video_link ?? ''}>
                             {launch?.links?.video_link
                                 ? 'Launch Video Link'
@@ -84,7 +86,7 @@ export default Launch;
 //     };
 // };
 
-// export const getStaticProps: GetStaticProps<LuanchPageProps> = async ({
+// export const getStaticProps: GetStaticProps<LaunchPageProps> = async ({
 //     params
 // }) => {
 //     const id = params?.launchId;
